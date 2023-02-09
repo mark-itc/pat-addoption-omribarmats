@@ -1,0 +1,50 @@
+.SearchBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  /* align-items: center; */
+  border: 1px solid lightgoldenrodyellow;
+  border-radius: 7px;
+  padding: 10px;
+  min-width: 500px;
+  background-color: antiquewhite;
+}
+
+.SearchBar p {
+  margin-bottom: 10px;
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 500;
+}
+
+.SearchBar input {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.SearchBar label {
+  font-size: 17px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.9);
+  margin-right: 15px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.SearchBar input:hover {
+  cursor: pointer;
+}
+
+.Parameter {
+  margin-right: 15px;
+}
+
+.SearchCheckbox {
+  display: flex;
+  flex-direction: row;
+}
+
+.searchButton {
+  align-self: flex-end;
+}

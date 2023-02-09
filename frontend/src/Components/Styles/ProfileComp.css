@@ -1,0 +1,32 @@
+.ProfileComp {
+  color: rgba(0, 0, 0, 0.9);
+  padding: 50px;
+}
+
+.ProfileComp .bio {
+  margin-bottom: 30px;
+}
+
+.ProfileComp img {
+  max-width: 250px;
+  border: none;
+  border-radius: 50px;
+}
+
+.ProfileComp .details {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
+.ProfileComp td,
+th {
+  padding: 10px;
+  text-align: left;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

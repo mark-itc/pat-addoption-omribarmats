@@ -1,0 +1,122 @@
+.RegularForm {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin-top: 50px;
+}
+
+.RegularForm label {
+  color: rgba(0, 0, 0, 0.9);
+  font-size: 17px;
+  margin-bottom: 3px;
+  font-weight: 500;
+}
+
+.RegularForm input[type="text"] {
+  border: 1px solid rgba(170, 170, 170, 0.85);
+  border-radius: 7px;
+  width: 350px;
+  height: 40px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 17px;
+  padding-left: 7px;
+  margin-bottom: 10px;
+}
+
+.RegularForm input[type="number"] {
+  border: 1px solid rgba(170, 170, 170, 0.85);
+  border-radius: 7px;
+  width: 350px;
+  height: 40px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 17px;
+  padding-left: 7px;
+  margin-bottom: 10px;
+}
+
+.RegularForm input[type="tel"] {
+  border: 1px solid rgba(170, 170, 170, 0.85);
+  border-radius: 7px;
+  width: 350px;
+  height: 40px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 17px;
+  padding-left: 7px;
+  margin-bottom: 10px;
+}
+
+.RegularForm input[type="email"] {
+  border: 1px solid rgba(170, 170, 170, 0.85);
+  border-radius: 7px;
+  width: 350px;
+  height: 40px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 17px;
+  padding-left: 7px;
+  margin-bottom: 10px;
+}
+
+.RegularForm input:focus {
+  border: none;
+  outline: 2px solid #a4506e;
+}
+
+.RegularForm textarea {
+  border: 1px solid rgba(170, 170, 170, 0.85);
+  border-radius: 7px;
+  width: 350px;
+  max-width: 500px;
+  height: 150px;
+  padding: 5px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 17px;
+  padding-left: 7px;
+  margin-bottom: 10px;
+}
+
+.RegularForm textarea:focus {
+  border: none;
+  outline: 2px solid #a4506e;
+}
+
+.RegularForm button {
+  margin-top: 20px;
+}
+
+.RegularForm .radio {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.RegularForm .radio label {
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 17px;
+  font-weight: 400;
+}
+
+.RegularForm input[type="radio"] {
+  outline: none;
+  margin: 0.4rem;
+}
+
+.RegularForm h3 {
+  color: rgba(0, 0, 0, 0.9);
+  font-size: 17px;
+  margin-bottom: 3px;
+  font-weight: 500;
+  text-align: center;
+}
+
+legend {
+  margin-left: 10px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+fieldset {
+  width: 100%;
+  border: 1px solid rgba(170, 170, 170, 0.85);
+  border-radius: 7px;
+  margin-bottom: 10px;
+}

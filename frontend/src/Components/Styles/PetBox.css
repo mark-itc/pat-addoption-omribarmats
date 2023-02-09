@@ -1,0 +1,40 @@
+.petsList {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+  align-content: start;
+  justify-content: center;
+}
+
+.PetBox {
+  background-color: antiquewhite;
+  border: antiquewhite solid 2px;
+  border-radius: 7px;
+  margin: 10px;
+}
+
+.PetBox p {
+  color: black;
+  font-size: 12px;
+  text-align: center;
+}
+
+.PetBox:hover p {
+  color: white;
+}
+
+.PetBox:hover {
+  background-color: #a4506e;
+  border: #a4506e solid 2px;
+  box-shadow: 0 0 10px #a4506e;
+}
+
+.PetBox img {
+  width: 180px;
+  border: none;
+  border-radius: 7px 7px 0 0;
+}
+
+.PetBox a {
+  text-decoration: none;
+}
