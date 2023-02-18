@@ -3,7 +3,7 @@ import "./Styles/PetBox.css";
 
 export const PetBox = (props) => {
   return (
-    <div class="PetBox">
+    <div className="PetBox">
       <a href="/pet">
         <img src={lucy}></img>
         <p>

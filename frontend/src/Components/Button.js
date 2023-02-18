@@ -7,6 +7,7 @@ export const Button = (props) => {
       type={props.type}
       disabled={props.disabled}
       style={{ backgroundColor: props.backgroundColor }}
+      onClick={props.onClick}
     >
       {props.text}
     </button>

@@ -21,7 +21,7 @@ export const NewPet = () => {
                 <legend>
                   <h3>Type</h3>
                 </legend>
-                <div class="radio">
+                <div className="radio">
                   <Select name={"type"} label={"Dog"} />
                   <Select name={"type"} label={"Cat"} />
                 </div>
@@ -31,7 +31,7 @@ export const NewPet = () => {
                 <legend>
                   <h3>Gender</h3>
                 </legend>
-                <div class="radio">
+                <div className="radio">
                   <Select name={"gender"} label={"F"} />
                   <Select name={"gender"} label={"M"} />
                 </div>
@@ -41,7 +41,7 @@ export const NewPet = () => {
                 <legend>
                   <h3>Status</h3>
                 </legend>
-                <div class="radio">
+                <div className="radio">
                   <Select name={"status"} label={"Sheltered"} />
                   <Select name={"status"} label={"Fostered"} />
                   <Select name={"status"} label={"Adopted"} />
@@ -51,7 +51,7 @@ export const NewPet = () => {
                 <legend>
                   <h3>Height (cm)</h3>
                 </legend>
-                <div class="radio">
+                <div className="radio">
                   <Select name={"height"} label={"10-20"} />
                   <Select name={"height"} label={"21-40"} />
                   <Select name={"height"} label={"41-60"} />
@@ -62,7 +62,7 @@ export const NewPet = () => {
                 <legend>
                   <h3>Weight (kg)</h3>
                 </legend>
-                <div class="radio">
+                <div className="radio">
                   <Select name={"weight"} label={"0-10"} />
                   <Select name={"weight"} label={"11-20"} />
                   <Select name={"weight"} label={"21-30"} />
@@ -73,7 +73,7 @@ export const NewPet = () => {
                 <legend>
                   <h3>Color</h3>
                 </legend>
-                <div class="radio">
+                <div className="radio">
                   <Select name={"color"} label={"White"} />
                   <Select name={"color"} label={"Black"} />
                   <Select name={"color"} label={"Grey"} />
@@ -85,7 +85,7 @@ export const NewPet = () => {
                 <legend>
                   <h3>Hypoallergenic</h3>
                 </legend>
-                <div class="radio">
+                <div className="radio">
                   <Select name={"hypo"} label={"Yes"} />
                   <Select name={"hypo"} label={"No"} />
                 </div>

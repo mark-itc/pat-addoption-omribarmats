@@ -33,7 +33,7 @@ export const ToggleBox = (props) => {
         }
       >
         <div className="head">
-          <img Width="100px" src={props.logo}></img>
+          <img width="100px" src={props.logo}></img>
           <h2>{props.title[active]}</h2>
         </div>
         <div className="body">

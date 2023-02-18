@@ -1,4 +1,5 @@
-import { Routes, Route, NavLink, useNavigate, Link } from "react-router-dom";
+import { Routes, Route, NavLink, useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import "./Views/Styles/App.css";
 import "./Components/Styles/Navbar.css";
 import { LoggedOut } from "./Views/LoggedOut";
@@ -10,10 +11,24 @@ import { Pet } from "./Views/Pet";
 import { Admin } from "./Views/Admin";
 import { NewPet } from "./Views/NewPet";
 import logo from "./Images/DogCats.png";
+import { authContext } from "./Context/authContext";
+import Cookies from "js-cookie";
 
 //test
 
 function App() {
+  const navigate = useNavigate();
+  const { authState, setAuthState } = useContext(authContext);
+
+  const handleLogout = () => {
+    Cookies.set("pet-adoption-credentials", null);
+    alert("You are now logged-out");
+    // setAuthState({ username: "", id: 0, status: false });
+    navigate("/search");
+    window.location.reload(false);
+    // );
+  };
+
   return (
     <div className="App">
       {/* new nabbar start */}
@@ -31,24 +46,39 @@ function App() {
       {/* new nabbar end */}
       <div className="Navbar">
         <div className="Navbar-menu">
-          <img Width="100px" src={logo}></img>
+          <img width="100px" src={logo}></img>
+
           <NavLink activeClassName="active" className={"tab"} to={"/search"}>
             Search
           </NavLink>
-          <NavLink activeClassName="active" className={"tab"} to={"/my-pets"}>
-            Pets
-          </NavLink>
-          <NavLink activeClassName="active" className={"tab"} to={"/profile"}>
-            Profile
-          </NavLink>
-        </div>
 
-        <div class="navbar-profile">
-          <a style={{ opacity: "1" }} href="/profile">
-            <p> Hey, User name |&nbsp;</p>
-          </a>
-          <a>Log out</a>
+          {authState.status ? (
+            <NavLink activeClassName="active" className={"tab"} to={"/my-pets"}>
+              Pets
+            </NavLink>
+          ) : (
+            <div className={"non-active"}>Pets</div>
+          )}
+          {authState.status ? (
+            <NavLink activeClassName="active" className={"tab"} to={"/profile"}>
+              Profile
+            </NavLink>
+          ) : (
+            <a className="non-active">Profile</a>
+          )}
         </div>
+        {authState.status ? (
+          <div className="navbar-profile">
+            <a style={{ opacity: "1" }} href="/profile">
+              <p>{authState.username} |&nbsp;</p>
+            </a>
+            <a onClick={handleLogout}>Log out</a>
+          </div>
+        ) : (
+          <NavLink activeClassName="active" className={"tab"} to={"/login"}>
+            Sign in
+          </NavLink>
+        )}
       </div>
       <Routes>
         <Route path="/" element={<LoggedOut />} />

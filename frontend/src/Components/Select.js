@@ -9,7 +9,7 @@ export const Select = (props) => {
         value={props.label}
         type="radio"
       ></input>
-      <label for={props.id}>{props.label}</label>
+      <label htmlFor={props.id}>{props.label}</label>
     </div>
   );
 };

@@ -25,6 +25,11 @@
   opacity: 1;
 }
 
+.non-active {
+  cursor: default;
+  opacity: 0.5;
+}
+
 .Navbar-menu {
   display: flex;
   gap: 45px;

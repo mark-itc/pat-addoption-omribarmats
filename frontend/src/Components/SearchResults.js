@@ -5,7 +5,7 @@ export const SearchResults = (props) => {
   return (
     <>
       {props.pets.length > 0 ? (
-        <div class="petsList">
+        <div className="petsList">
           {props.pets.map((pet, index) => {
             return (
               <PetBox
