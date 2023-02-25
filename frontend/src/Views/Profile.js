@@ -1,3 +1,6 @@
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { authContext } from "../Context/authContext";
 import { ToggleBox } from "../Components/ToggleBox";
 import { ProfileComp } from "../Components/ProfileComp";
 import { Input } from "../Components/Input";
@@ -6,28 +9,58 @@ import logo from "../Images/DogCats.png";
 import profileImage from "../Images/omri-31072022.jpg";
 import "../Components/Styles/Form.css";
 
-const user = {
-  firstName: "Josh",
-  lastName: "Berkman",
-  userName: "berkman1010",
-  image: profileImage,
-  email: "joshb10@gmail.com",
-  phone: "0527389454",
-  password: "12345678",
-  bio: "Hi, my name is Josh and I am a dog lover. In my free time, I enjoy spending time outdoors and staying active. Thank you for considering me as a potential adopter for your furry friend.",
-  age: "32",
-  city: "Jerusalem",
-  gender: "M",
-};
-
 export const Profile = () => {
+  const navigate = useNavigate();
+  const { authState } = useContext(authContext);
+  const { apiKey } = useContext(authContext);
+  const [user, setUser] = useState({});
+  user.age = new Date().getFullYear() - new Date(user.birthDate).getFullYear();
+  const { userName } = useParams();
+
+  useEffect(() => {
+    if (apiKey) {
+      getUser();
+    }
+  }, [apiKey, userName]);
+
+  const getUser = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/profile/${userName}`,
+        {
+          method: "get",
+          headers: {
+            accessToken: apiKey,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success === false) {
+            let message = data.message;
+            alert(message);
+          } else {
+            console.log("user data", data.user);
+            setUser(data.user);
+            console.log("authstate user", authState.userName);
+            console.log("user user", user.userName);
+          }
+        });
+    } catch (e) {}
+  };
+
   return (
     <div>
       <ToggleBox
+        userName={user.userName}
+        authUserName={authState.userName}
+        userRole={authState.role}
         tabLeft="Profile"
         tabRight="Edit"
         title={{
-          left: `${user.firstName} | ${user.age} | ${user.gender} | ${user.city}`,
+          left: `${user.firstName} | ${user.age} Y | ${user.city}`,
+
           right: "Edit Your Profile",
         }}
         logo={logo}
@@ -37,13 +70,13 @@ export const Profile = () => {
               firstName={user.firstName}
               lastName={user.lastName}
               userName={user.userName}
-              image={user.image}
+              image={user.file}
               email={user.email}
               phone={user.phone}
-              password={user.password}
               bio={user.bio}
             />
           ),
+
           right: (
             <div>
               <form className="RegularForm">
@@ -60,8 +93,8 @@ export const Profile = () => {
                 <Input label={"Email"} type={"email"} value={user.email} />
                 <Input label={"Phone"} type={"tel"} value={user.phone} />
                 <Input label={"Bio"} type={"text"} value={user.bio} />
-                <Input label={"Password"} type={"text"} value={user.password} />
-                <Input label={"Re-enter Password"} type={"text"} />
+                <Input label={"New password"} type={"text"} />
+                <Input label={"Re-enter new password"} type={"text"} />
                 <Button
                   text="Save"
                   type="submit"

@@ -4,8 +4,8 @@ import "./Styles/PetBox.css";
 export const PetBox = (props) => {
   return (
     <div className="PetBox">
-      <a href="/pet">
-        <img src={lucy}></img>
+      <a href={"/pet/" + props.name}>
+        <img src={props.image}></img>
         <p>
           {props.name} | {props.age} | {props.sex} | {props.type} |{" "}
           {props.status}

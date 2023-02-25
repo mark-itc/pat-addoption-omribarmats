@@ -10,17 +10,22 @@ import Cookies from "js-cookie";
 
 export const LoginSignup = () => {
   const navigate = useNavigate();
-  const { authEmail, setAuthEmail } = useContext(authContext);
-  const { apiKey, setApiKey } = useContext(authContext);
+  const { setApiKey } = useContext(authContext);
+  const { authState } = useContext(authContext);
 
-  const [user, setUser] = useState("");
+  if (authState.status) navigate("/search");
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [city, setCity] = useState(0);
+  const [birthDate, setBirthDate] = useState(0);
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+  const [bio, setBio] = useState(null);
+  const [file, setFile] = useState(null);
   const [passWordAlert, setPassWordAlert] = useState(false);
   const [phoneAlert, setPhoneAlert] = useState(false);
   const [phoneShortAlert, setPhoneShortAlert] = useState(false);
@@ -47,11 +52,24 @@ export const LoginSignup = () => {
         email.length &&
         phone.length &&
         password.length &&
-        rePassword.length
+        rePassword.length &&
+        city.length &&
+        file
         ? true
         : false
     );
-  }, [firstName, lastName, userName, email, phone, password, rePassword]);
+  }, [
+    firstName,
+    lastName,
+    userName,
+    email,
+    phone,
+    password,
+    rePassword,
+    city,
+    birthDate,
+    file,
+  ]);
 
   useEffect(() => {
     setAllLoginInputsFilled(email.length && password.length ? true : false);
@@ -75,55 +93,46 @@ export const LoginSignup = () => {
             let message = data.message;
             alert(message);
           } else {
-            // console.log(data.token);
-            // setAuthEmail(email);
             setApiKey(data.token);
             alert("Success! You are now logged-in");
             Cookies.set("pet-adoption-credentials", data.token);
-            navigate("/profile");
+            navigate("/search");
           }
         });
     } catch (e) {}
   };
 
-  const handleRegisterClick = async () => {
-    setUser({
-      firstname: firstName,
-      lastname: lastName,
-      username: userName,
-      email: email,
-      phone: phone,
-      password: password,
-      rePassword: rePassword,
-    });
+  const formData = new FormData();
+  formData.append("firstName", firstName);
+  formData.append("lastName", lastName);
+  formData.append("userName", userName);
+  formData.append("email", email);
+  formData.append("phone", phone);
+  formData.append("city", city);
+  formData.append("birthDate", birthDate);
+  formData.append("password", password);
+  formData.append("rePassword", rePassword);
+  formData.append("bio", bio);
+  formData.append("file", file);
 
+  const handleRegisterClick = async () => {
     try {
       const response = await fetch("http://localhost:3001/register", {
         method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstname: firstName,
-          lastname: lastName,
-          username: userName,
-          email: email,
-          phone: phone,
-          password: password,
-          repassword: rePassword,
-        }),
+        headers: {},
+        body: formData,
       })
+        .catch((error) => console.error(error))
+
         .then((response) => response.json())
         .then((data) => {
           if (data.success === false) {
             let message = data.message;
             alert(message);
           } else {
-            console.log(data.token);
-            setAuthEmail(email);
             setApiKey(data.token);
             alert("Success! You are now registered");
-            navigate("/profile");
+            navigate(`/profile/${userName}`);
           }
         });
     } catch (e) {}
@@ -212,6 +221,23 @@ export const LoginSignup = () => {
               <br />
               {phoneShortAlert ? " Too short" : null}
               <Input
+                name={"City"}
+                label={"City"}
+                type={"text"}
+                onInputChange={(eventValue) => {
+                  setCity(eventValue);
+                }}
+              />
+
+              <Input
+                name={"Birth date"}
+                label={"Birth date"}
+                type={"date"}
+                onInputChange={(eventValue) => {
+                  setBirthDate(eventValue);
+                }}
+              />
+              <Input
                 label={"Password"}
                 type={"text"}
                 onInputChange={(eventValue) => {
@@ -225,7 +251,23 @@ export const LoginSignup = () => {
                   setRePassword(eventValue);
                 }}
               />
+
               {passWordAlert ? "Passwords do not match" : null}
+              <Input
+                label={"Bio"}
+                type={"textarea"}
+                onInputChange={(eventValue) => {
+                  setBio(eventValue);
+                }}
+              />
+              <Input
+                label={"Image"}
+                type={"file"}
+                name={"file"}
+                onChange={(event) => {
+                  setFile(event.target.files[0]);
+                }}
+              ></Input>
               <Button
                 text="Sign-up"
                 type="submit"

@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { authContext } from "../Context/authContext";
 import { ToggleBox } from "../Components/ToggleBox";
 import logo from "../Images/DogCats.png";
 import { SearchResults } from "../Components/SearchResults";
@@ -15,6 +18,11 @@ const pets = [
 ];
 
 export const MyPets = () => {
+  const navigate = useNavigate();
+  const { authState } = useContext(authContext);
+
+  if (!authState.status) navigate("/login");
+
   return (
     <div>
       <ToggleBox

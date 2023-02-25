@@ -34,5 +34,27 @@ export const Input = (props) => {
     </>
   );
 
-  return <>{props.label == "Bio" ? textArea : textInput}</>;
+  let fileInput = (
+    <>
+      <label htmlFor={props.id}>{props.label}</label>
+      <input
+        id={props.id}
+        name={props.name}
+        type={props.type}
+        min={props.min}
+        max={props.max}
+        onChange={props.onChange}
+      />
+    </>
+  );
+
+  if (props.label == "Bio") {
+    return textArea;
+  }
+
+  if (props.type == "file") {
+    return fileInput;
+  } else return textInput;
+
+  // return <>{props.label == "Bio" ? textArea : textInput}</>;
 };

@@ -3,9 +3,6 @@ import "./Styles/ProfileComp.css";
 export const ProfileComp = (props) => {
   return (
     <div className="ProfileComp">
-      <div className="bio">
-        <p>{props.bio}</p>
-      </div>
       <div className="details">
         <img src={props.image}></img>
         {props.for == "pet" ? (
@@ -45,16 +42,16 @@ export const ProfileComp = (props) => {
               <th>Username</th>
               <td>{props.userName}</td>
             </tr>
-            <tr>
-              <th>Password </th>
-              <td>{props.password}</td>
-            </tr>
+
             <tr>
               <th>Phone number</th>
               <td>{props.phone}</td>
             </tr>
           </table>
         )}
+      </div>
+      <div className="bio">
+        <p>{props.bio}</p>
       </div>
     </div>
   );

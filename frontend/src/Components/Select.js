@@ -4,11 +4,13 @@ export const Select = (props) => {
   return (
     <div>
       <input
-        id={props.name}
         name={props.name}
         value={props.label}
+        id={props.label}
+        checked={props.checked}
+        onChange={props.onChange}
         type="radio"
-      ></input>
+      />
       <label htmlFor={props.id}>{props.label}</label>
     </div>
   );

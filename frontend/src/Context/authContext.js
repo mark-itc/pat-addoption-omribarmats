@@ -11,6 +11,7 @@ const AuthProvider = ({ children }) => {
     username: "",
     id: 0,
     status: false,
+    role: "user",
   });
 
   useEffect(() => {
@@ -31,9 +32,10 @@ const AuthProvider = ({ children }) => {
         } else {
           console.log("success", response.data);
           setAuthState({
-            username: response.data.username,
+            userName: response.data.userName,
             id: response.data.id,
             status: true,
+            role: response.data.role,
           });
         }
       } catch (error) {

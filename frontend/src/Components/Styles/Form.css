@@ -23,7 +23,7 @@
   margin-bottom: 10px;
 }
 
-.RegularForm input[type="number"] {
+.RegularForm input[type="date"] {
   border: 1px solid rgba(170, 170, 170, 0.85);
   border-radius: 7px;
   width: 350px;
@@ -33,6 +33,17 @@
   padding-left: 7px;
   margin-bottom: 10px;
 }
+
+/* .RegularForm input[type="number"] {
+  border: 1px solid rgba(170, 170, 170, 0.85);
+  border-radius: 7px;
+  width: 350px;
+  height: 40px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 17px;
+  padding-left: 7px;
+  margin-bottom: 10px;
+} */
 
 .RegularForm input[type="tel"] {
   border: 1px solid rgba(170, 170, 170, 0.85);

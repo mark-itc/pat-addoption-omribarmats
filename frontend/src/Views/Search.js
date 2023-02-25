@@ -1,26 +1,37 @@
+import { useState, useEffect, useContext } from "react";
 import { ToggleBox } from "../Components/ToggleBox";
 import logo from "../Images/DogCats.png";
 import { SearchBar } from "../Components/SearchBar";
 import { Parameter } from "../Components/Parameter";
 import { CheckBox } from "../Components/CheckBox";
 import { SearchResults } from "../Components/SearchResults";
-
-const pets = [
-  {
-    name: "Lucy",
-    age: 5,
-    sex: "F",
-    type: "Cat",
-    status: "Fostered",
-  },
-  { name: "Daisy", age: 7, sex: "M", type: "Cat", status: "Adopted" },
-  { name: "Daisy", age: 10, sex: "M", type: "Cat", status: "Adopted" },
-  { name: "Daisy", age: 2, sex: "M", type: "Cat", status: "Adopted" },
-  { name: "Daisy", age: 1, sex: "M", type: "Cat", status: "Adopted" },
-  { name: "Daisy", age: 3, sex: "M", type: "Cat", status: "Adopted" },
-];
+import { authContext } from "../Context/authContext";
+import { getPets } from "../API/petsAPI";
 
 export const Search = () => {
+  const { apiKey } = useContext(authContext);
+  const [pets, setPets] = useState([]);
+  const [type, setType] = useState([]);
+  const [gender, setGender] = useState([]);
+  const [status, setStatus] = useState([]);
+  const [height, setHeight] = useState([]);
+  const [Weight, setWeight] = useState([]);
+
+  useEffect(() => {
+    if (apiKey) {
+      searchPetsInAPI();
+    }
+  }, [apiKey]);
+
+  const searchPetsInAPI = async () => {
+    const results = await getPets(apiKey);
+    if (results.success) {
+      setPets(results.data);
+    } else {
+      console.log("not success");
+    }
+  };
+
   return (
     <div>
       <ToggleBox
@@ -44,7 +55,7 @@ export const Search = () => {
                 }
                 Parameter2={
                   <Parameter
-                    title="Sex"
+                    title="Gender"
                     CheckBox1={<CheckBox text="F" />}
                     CheckBox2={<CheckBox text="M" />}
                   />
@@ -69,7 +80,7 @@ export const Search = () => {
                 }
                 Parameter2={
                   <Parameter
-                    title="Sex"
+                    title="Gender"
                     CheckBox1={<CheckBox text="F" />}
                     CheckBox2={<CheckBox text="M" />}
                   />

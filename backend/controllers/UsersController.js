@@ -18,9 +18,10 @@ module.exports = class UsersController {
       }
 
       const userObject = req.body;
+      userObject.file = "http://localhost:3001/" + req.file.path;
 
       const existingUser = await UsersDAO.getUserByUsername(
-        userObject.username
+        userObject.userName
       );
       if (existingUser) {
         return res.status(400).json({
@@ -47,7 +48,7 @@ module.exports = class UsersController {
       const token = jwt.sign(
         {
           user_id: user._id,
-          username: user.email,
+          userName: user.userName,
         },
         process.env.JWT_SECRET
       );
@@ -89,7 +90,8 @@ module.exports = class UsersController {
       const token = jwt.sign(
         {
           user_id: user._id,
-          username: user.email,
+          userName: user.userName,
+          role: user.role,
         },
         process.env.JWT_SECRET
       );
@@ -112,6 +114,45 @@ module.exports = class UsersController {
       res.json(req.user);
     } catch (e) {
       console.log("catch");
+    }
+  }
+
+  static async GetAllUsers(req, res) {
+    try {
+      const allUsers = await UsersDAO.getAllUsers();
+
+      return res.status(200).json({
+        success: true,
+        allUsers: allUsers,
+      });
+    } catch (e) {
+      console.log(`Error in UsersController.GetAllUsers ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
+    }
+  }
+
+  static async GetOneUser(req, res) {
+    try {
+      const { userName } = req.params;
+      console.log(req.params);
+      console.log("getting user");
+      const user = await UsersDAO.GetOneUser(userName);
+
+      return res.status(200).json({
+        success: true,
+        user: user,
+      });
+    } catch (e) {
+      console.log(`Error in UsersController.GetOneUser ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
     }
   }
 };

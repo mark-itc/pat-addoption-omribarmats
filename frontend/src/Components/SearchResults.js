@@ -10,9 +10,14 @@ export const SearchResults = (props) => {
             return (
               <PetBox
                 key={index}
+                image={pet.file}
                 name={pet.name}
-                age={pet.age}
-                sex={pet.sex}
+                age={
+                  new Date().getFullYear() -
+                  new Date(pet.birthdate).getFullYear() +
+                  "Y"
+                }
+                sex={pet.gender}
                 type={pet.type}
                 status={pet.status}
               />

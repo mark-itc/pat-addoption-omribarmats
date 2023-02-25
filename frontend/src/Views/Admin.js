@@ -1,11 +1,53 @@
 import logo from "../Images/DogCats.png";
 import { ToggleBox } from "../Components/ToggleBox";
-
-const admins = ["Yossi", "Itzik"];
-const users = ["Josh Berkman", "Carla", "Reuven", "Malka", "Tzipi"];
-const pets = ["Pizza", " Keys", "Enrique", "August", "Jermiah", "Linda"];
+import { useState, useEffect, useContext } from "react";
+import { authContext } from "../Context/authContext";
+import { getPets } from "../API/petsAPI";
+import { getUsers } from "../API/usersAPI";
 
 export const Admin = () => {
+  const [admins, setAdmins] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [pets, setPets] = useState([]);
+  const { apiKey } = useContext(authContext);
+
+  useEffect(() => {
+    if (apiKey) {
+      fetchPetsFromAPI();
+      fetchUsersFromAPI();
+    }
+  }, [apiKey]);
+
+  const fetchPetsFromAPI = async () => {
+    const results = await getPets(apiKey);
+    if (results.success) {
+      setPets(results.data.map((pet) => pet.name));
+    } else {
+      console.log("not success");
+    }
+  };
+
+  const fetchUsersFromAPI = async () => {
+    const results = await getUsers(apiKey);
+    console.log(results.success);
+    if (results.success) {
+      const filteredUsers = results.data
+        .filter((user) => user.role === "user")
+        .map((user) => user.userName);
+
+      setUsers(filteredUsers);
+
+      const filteredAdmins = results.data
+        .filter((user) => user.role === "admin")
+        .map((user) => user.userName);
+
+      setAdmins(filteredAdmins);
+    } else {
+      console.log("not success");
+      alert(results.data.message);
+    }
+  };
+
   return (
     <div>
       <ToggleBox
@@ -24,7 +66,7 @@ export const Admin = () => {
                 {admins.map((admin, index) => {
                   return (
                     <p>
-                      {index + 1}. <a href="/profile">{admin}</a>
+                      {index + 1}. <a href={"/profile/" + admin}>{admin}</a>
                     </p>
                   );
                 })}
@@ -34,7 +76,7 @@ export const Admin = () => {
                 {users.map((user, index) => {
                   return (
                     <p>
-                      {index + 1}. <a href="/pet">{user}</a>
+                      {index + 1}. <a href={"/profile/" + user}>{user}</a>
                     </p>
                   );
                 })}
@@ -47,7 +89,7 @@ export const Admin = () => {
               {pets.map((pet, index) => {
                 return (
                   <p>
-                    {index + 1}. <a href="/pet">{pet}</a>
+                    {index + 1}. <a href={"/pet/" + pet}>{pet}</a>
                   </p>
                 );
               })}

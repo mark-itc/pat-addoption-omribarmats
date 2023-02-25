@@ -7,14 +7,15 @@ import { LoginSignup } from "./Views/Login";
 import { Search } from "./Views/Search";
 import { Profile } from "./Views/Profile";
 import { MyPets } from "./Views/MyPets";
+import { NotSignedIn } from "./Views/NotSignedIn";
+import { AdminsOnly } from "./Views/AdminsOnly";
 import { Pet } from "./Views/Pet";
 import { Admin } from "./Views/Admin";
 import { NewPet } from "./Views/NewPet";
+import { Page404 } from "./Views/404";
 import logo from "./Images/DogCats.png";
 import { authContext } from "./Context/authContext";
 import Cookies from "js-cookie";
-
-//test
 
 function App() {
   const navigate = useNavigate();
@@ -31,19 +32,20 @@ function App() {
 
   return (
     <div className="App">
-      {/* new nabbar start */}
-      <div className="Navbar-admin">
-        <div className="Navbar-menu-admin">
-          Hello, Admin
-          <NavLink activeClassName="active" className={"tab"} to={"/admin"}>
-            Dashboard
-          </NavLink>
-          <NavLink activeClassName="active" className={"tab"} to={"/new-pet"}>
-            New pet
-          </NavLink>
+      {authState.role === "admin" ? (
+        <div className="Navbar-admin">
+          <div className="Navbar-menu-admin">
+            Hello, {authState.role}
+            <NavLink activeClassName="active" className={"tab"} to={"/admin"}>
+              Dashboard
+            </NavLink>
+            <NavLink activeClassName="active" className={"tab"} to={"/new-pet"}>
+              New pet
+            </NavLink>
+          </div>
         </div>
-      </div>
-      {/* new nabbar end */}
+      ) : null}
+
       <div className="Navbar">
         <div className="Navbar-menu">
           <img width="100px" src={logo}></img>
@@ -60,7 +62,11 @@ function App() {
             <div className={"non-active"}>Pets</div>
           )}
           {authState.status ? (
-            <NavLink activeClassName="active" className={"tab"} to={"/profile"}>
+            <NavLink
+              activeClassName="active"
+              className={"tab"}
+              to={`/profile/${authState.userName}`}
+            >
               Profile
             </NavLink>
           ) : (
@@ -69,9 +75,8 @@ function App() {
         </div>
         {authState.status ? (
           <div className="navbar-profile">
-            <a style={{ opacity: "1" }} href="/profile">
-              <p>{authState.username} |&nbsp;</p>
-            </a>
+            <p>{authState.userName} |&nbsp;</p>
+
             <a onClick={handleLogout}>Log out</a>
           </div>
         ) : (
@@ -84,11 +89,36 @@ function App() {
         <Route path="/" element={<LoggedOut />} />
         <Route path="/login" element={<LoginSignup />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/my-pets" element={<MyPets />} />
-        <Route path="/pet" element={<Pet />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/new-pet" element={<NewPet />} />
+        <Route path="/pet" element={<Pet />}>
+          <Route path=":name" element={<Pet />} />
+        </Route>
+
+        {authState.status ? (
+          <>
+            <Route path="/profile" element={<Profile />}>
+              <Route path=":userName" element={<Profile />} />
+            </Route>
+            <Route path="/my-pets" element={<MyPets />} />
+          </>
+        ) : (
+          <>
+            <Route path="/profile" element={<NotSignedIn />} />
+            <Route path="/my-pets" element={<NotSignedIn />} />
+          </>
+        )}
+
+        {authState.role === "admin" ? (
+          <>
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/new-pet" element={<NewPet />} />
+          </>
+        ) : (
+          <>
+            <Route path="/admin" element={<AdminsOnly />} />
+            <Route path="/new-pet" element={<AdminsOnly />} />
+          </>
+        )}
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </div>
   );

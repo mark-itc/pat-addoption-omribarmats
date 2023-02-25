@@ -15,12 +15,12 @@ module.exports = class UsersDAO {
 
   static async createUser(userData) {
     userData.created_at = new Date();
-    userData.login_attempts = 0;
+    userData.role = "user";
     await collection.insertOne({ ...userData });
   }
 
-  static async getUserByUsername(username) {
-    return await collection.findOne({ username });
+  static async getUserByUsername(userName) {
+    return await collection.findOne({ userName });
   }
 
   static async getUserByEmail(email) {
@@ -31,8 +31,14 @@ module.exports = class UsersDAO {
     await collection.updateOne({ _id: userData._id }, { $set: { userData } });
   }
 
-  // create a new method called getUserById
   static async getUserById(userId) {
     return await collection.findOne({ _id: new ObjectId(userId) });
+  }
+
+  static async getAllUsers() {
+    return await collection.find({}).toArray();
+  }
+  static async GetOneUser(userName) {
+    return await collection.findOne({ userName: userName });
   }
 };
