@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { authContext } from "../Context/authContext";
 import { ToggleBox } from "../Components/ToggleBox";
 import logo from "../Images/DogCats.png";
@@ -37,6 +37,39 @@ export const NewPet = () => {
   formData.append("diet", diet);
   formData.append("bio", bio);
   formData.append("file", file);
+  const [allLoginInputsFilled, setAllLoginInputsFilled] = useState(false);
+
+  useEffect(() => {
+    setAllLoginInputsFilled(
+      name.length &&
+        type &&
+        birthDate &&
+        gender &&
+        breed.length &&
+        status &&
+        height &&
+        color &&
+        hypoallergenic &&
+        diet.length &&
+        bio.length &&
+        file
+        ? true
+        : false
+    );
+  }, [
+    name,
+    type,
+    birthDate,
+    gender,
+    breed,
+    status,
+    height,
+    color,
+    hypoallergenic,
+    diet,
+    bio,
+    file,
+  ]);
 
   const handleAddPetClick = async () => {
     try {
@@ -305,6 +338,7 @@ export const NewPet = () => {
                   event.preventDefault();
                   handleAddPetClick();
                 }}
+                disabled={!allLoginInputsFilled ? true : false}
               />
             </form>
           ),

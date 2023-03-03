@@ -12,7 +12,7 @@ module.exports.RegisterValidation = ajv.compile({
     city: { type: "string" },
     birthDate: { type: "string" },
     password: { type: "string" },
-    rePassword: { type: "string" },
+
     file: { type: "object" },
     bio: { type: "string" },
   },
@@ -25,7 +25,7 @@ module.exports.RegisterValidation = ajv.compile({
     "city",
     "birthDate",
     "password",
-    "rePassword",
+
     "bio",
   ],
   additionalProperties: false,

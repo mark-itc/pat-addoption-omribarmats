@@ -12,7 +12,8 @@
   font-weight: 500;
 }
 
-.RegularForm input[type="text"] {
+.RegularForm input[type="text"],
+input[type="password"] {
   border: 1px solid rgba(170, 170, 170, 0.85);
   border-radius: 7px;
   width: 350px;

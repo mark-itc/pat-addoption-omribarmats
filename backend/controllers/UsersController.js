@@ -1,6 +1,7 @@
 const sha256 = require("js-sha256");
 const jwt = require("jsonwebtoken");
 const UsersDAO = require("../models/UsersDAO");
+const PetsDAO = require("../models/PetsDAO");
 const {
   RegisterValidation,
   LoginValidation,
@@ -67,7 +68,6 @@ module.exports = class UsersController {
 
   static async Login(req, res) {
     try {
-      console.log(req.body);
       const validRequest = LoginValidation(req.body);
 
       if (!validRequest) {
@@ -138,8 +138,7 @@ module.exports = class UsersController {
   static async GetOneUser(req, res) {
     try {
       const { userName } = req.params;
-      console.log(req.params);
-      console.log("getting user");
+
       const user = await UsersDAO.GetOneUser(userName);
 
       return res.status(200).json({
@@ -148,6 +147,169 @@ module.exports = class UsersController {
       });
     } catch (e) {
       console.log(`Error in UsersController.GetOneUser ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
+    }
+  }
+
+  static async updateUser(req, res) {
+    try {
+      const { userName } = req.params;
+      const { userData } = req.body;
+
+      console.log(userData);
+
+      if (userData.password) {
+        userData.password = sha256(userData.password);
+      }
+      const user = await UsersDAO.updateUser(userData, userName);
+
+      return res.status(200).json({
+        success: true,
+        message: "User updated",
+      });
+    } catch (e) {
+      console.log(`Error in UsersController.updateUser ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
+    }
+  }
+
+  static async Save(req, res) {
+    try {
+      const userName = req.params.user;
+      const pet = req.params.pet;
+
+      await UsersDAO.savePetToUser(userName, pet);
+
+      return res.status(200).json({
+        success: true,
+        message: "Pet saved",
+      });
+    } catch (e) {
+      console.log(`Error in UsersController.Save ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
+    }
+  }
+
+  static async UnSave(req, res) {
+    try {
+      const userName = req.params.user;
+      const pet = req.params.pet;
+
+      await UsersDAO.UnSavePetFromUser(userName, pet);
+
+      return res.status(200).json({
+        success: true,
+        message: "Pet Unsaved",
+      });
+    } catch (e) {
+      console.log(`Error in UsersController.UnSave ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
+    }
+  }
+
+  static async Foster(req, res) {
+    try {
+      const userName = req.params.user;
+      const pet = req.params.pet;
+      const fosteredStatus = { status: "Fostered" };
+
+      await UsersDAO.fosterPetToUser(userName, pet);
+      await PetsDAO.updatePet(fosteredStatus, pet);
+
+      return res.status(200).json({
+        success: true,
+        message: "Pet fostered",
+      });
+    } catch (e) {
+      console.log(`Error in UsersController.foster ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
+    }
+  }
+
+  static async Adopt(req, res) {
+    try {
+      const userName = req.params.user;
+      const pet = req.params.pet;
+      const adoptStatus = { status: "Adopted" };
+
+      console.log(pet);
+
+      await UsersDAO.adoptPetToUser(userName, pet);
+      await PetsDAO.updatePet(adoptStatus, pet);
+
+      return res.status(200).json({
+        success: true,
+        message: "Pet adopted",
+      });
+    } catch (e) {
+      console.log(`Error in UsersController.adopt ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
+    }
+  }
+
+  static async Return(req, res) {
+    try {
+      const userName = req.params.user;
+      const pet = req.params.pet;
+      const ShelteredStatus = { status: "Sheltered" };
+
+      await UsersDAO.returnPet(userName, pet);
+      await PetsDAO.updatePet(ShelteredStatus, pet);
+
+      return res.status(200).json({
+        success: true,
+        message: "Pet returned",
+      });
+    } catch (e) {
+      console.log(`Error in UsersController.Save ${e}`);
+
+      return res.status(500).json({
+        success: false,
+        message: "unknown error",
+      });
+    }
+  }
+
+  static async Getuserpets(req, res, next) {
+    try {
+      const { userName } = req.params;
+      const user = await UsersDAO.GetUserPets(userName);
+
+      console.log("1saved", user.saved);
+      console.log("1fostering", user.fostering);
+      console.log("1adopted", user.adopted);
+
+      req.saved = user.saved;
+      req.fostering = user.fostering;
+      req.adopted = user.adopted;
+
+      next();
+    } catch (e) {
+      console.log(`Error in UsersController.GetUserPets ${e}`);
 
       return res.status(500).json({
         success: false,

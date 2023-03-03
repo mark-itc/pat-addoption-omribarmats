@@ -1,27 +1,36 @@
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { authContext } from "../Context/authContext";
 import { ToggleBox } from "../Components/ToggleBox";
 import logo from "../Images/DogCats.png";
 import { SearchResults } from "../Components/SearchResults";
-
-const pets = [
-  {
-    name: "Lucy",
-    age: 5,
-    sex: "F",
-    type: "Cat",
-    status: "Fostered",
-  },
-  { name: "Daisy", age: 7, sex: "M", type: "Cat", status: "Adopted" },
-  { name: "Daisy", age: 10, sex: "M", type: "Cat", status: "Adopted" },
-];
+import { getUserPetsFromAPI } from "../API/petsAPI";
 
 export const MyPets = () => {
   const navigate = useNavigate();
-  const { authState } = useContext(authContext);
+  const { authState, apiKey } = useContext(authContext);
+  const [savedPets, setSavedPets] = useState([]);
+  const [adoptedPets, setAdoptedPets] = useState([]);
+  const [fosteringPets, setFosteringPets] = useState([]);
 
   if (!authState.status) navigate("/login");
+
+  useEffect(() => {
+    if (apiKey) {
+      getUserPets();
+    }
+  }, [apiKey]);
+
+  const getUserPets = async () => {
+    const results = await getUserPetsFromAPI(apiKey, authState.userName);
+    if (results.success) {
+      setSavedPets(results.saved);
+      setAdoptedPets(results.adopted);
+      setFosteringPets(results.fostering);
+    } else {
+      console.log("not success");
+    }
+  };
 
   return (
     <div>
@@ -35,14 +44,22 @@ export const MyPets = () => {
         logo={logo}
         body={{
           left: (
-            <SearchResults
-              pets={pets}
-              noResults={"You currently do not own or foster any pets."}
-            />
+            <>
+              {/* <h2 style={{ textAlign: "center", margin: "0px" }}>Adopted</h2> */}
+              <SearchResults
+                pets={adoptedPets}
+                noResults={"No adopted pets."}
+              />
+              {/* <h3 style={{ textAlign: "center" }}>Fostering</h3> */}
+              <SearchResults
+                pets={fosteringPets}
+                noResults={"No fostered pets."}
+              />
+            </>
           ),
           right: (
             <SearchResults
-              pets={pets}
+              pets={savedPets}
               noResults={`You didn’t save any pets yet.`}
             />
           ),

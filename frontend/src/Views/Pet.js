@@ -8,6 +8,14 @@ import { authContext } from "../Context/authContext";
 import { Input } from "../Components/Input";
 import { Select } from "../Components/Select";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  savePet,
+  fosterPet,
+  adoptPet,
+  returnPet,
+  unSavePet,
+  getUserPetsFromAPI,
+} from "../API/petsAPI";
 
 export const Pet = () => {
   const { apiKey, authState } = useContext(authContext);
@@ -26,9 +34,22 @@ export const Pet = () => {
   const [diet, setDiet] = useState("");
   const [bio, setBio] = useState("");
   const [file, setFile] = useState({});
+  const [savedPets, setSavedPets] = useState([]);
+  const [adoptedPets, setAdoptedPets] = useState([]);
+  const [fosteringPets, setFosteringPets] = useState([]);
+  const [thisPetSaved, setThisPetSaved] = useState(false);
+  const [thisPetOwned, setThisPetOwned] = useState(false);
 
   pet.age = new Date().getFullYear() - new Date(pet.birthdate).getFullYear();
   console.log("date", pet.birthdate);
+
+  console.log("includes", savedPets.includes(pet.name));
+  console.log("saved", savedPets, "petname", pet.name);
+  console.log("thisPetSaved", thisPetSaved);
+  console.log("adoptedPets", adoptedPets);
+  console.log("fosteringPets", fosteringPets);
+  console.log("thisPetOwned", thisPetOwned);
+  console.log("adoptedPets.includes(pet.name)", adoptedPets.includes(pet.name));
 
   const { name } = useParams();
 
@@ -41,6 +62,68 @@ export const Pet = () => {
       getPet();
     }
   }, [apiKey]);
+
+  useEffect(() => {
+    if ((apiKey, authState.userName)) {
+      getUserPets();
+    }
+  }, [apiKey, authState.userName]);
+
+  useEffect(() => {
+    if ((savedPets, pet.name)) {
+      setThisPetSaved(savedPets.includes(pet.name) ? true : false);
+    }
+    if (fosteringPets || adoptedPets) {
+      setThisPetOwned(
+        fosteringPets.includes(pet.name) ||
+          (adoptedPets.includes(pet.name) && true)
+      );
+    }
+  }, [savedPets, adoptedPets, fosteringPets]);
+
+  const getUserPets = async () => {
+    console.log("user", authState.userName);
+    const results = await getUserPetsFromAPI(apiKey, authState.userName);
+    if (results.success) {
+      setSavedPets(results.saved.map((pet) => pet.name));
+      setAdoptedPets(results.adopted.map((pet) => pet.name));
+      setFosteringPets(results.fostering.map((pet) => pet.name));
+    } else {
+      console.log("not success");
+    }
+  };
+
+  const handleSaveClick = async () => {
+    await savePet(apiKey, authState.userName, pet.name);
+    if ((savedPets, pet.name)) {
+      setThisPetSaved(savedPets.includes(pet.name) && true);
+    }
+  };
+
+  const handleUnSaveClick = async () => {
+    unSavePet(apiKey, authState.userName, pet.name);
+    if ((savedPets, pet.name)) {
+      setThisPetSaved(savedPets.includes(pet.name) && false);
+    }
+  };
+
+  const handleFosterClick = async () => {
+    fosterPet(apiKey, authState.userName, pet.name).then(() => {
+      window.location.reload(false);
+    });
+  };
+
+  const handleAdoptClick = async () => {
+    adoptPet(apiKey, authState.userName, pet.name).then(() => {
+      window.location.reload(false);
+    });
+  };
+
+  const handleReturnClick = async () => {
+    returnPet(apiKey, authState.userName, pet.name).then(() => {
+      window.location.reload(false);
+    });
+  };
 
   const getPet = async () => {
     try {
@@ -70,7 +153,7 @@ export const Pet = () => {
         });
     } catch (e) {}
   };
-
+  console.log("Status", status, typeof status);
   return (
     <div>
       <ToggleBox
@@ -99,30 +182,66 @@ export const Pet = () => {
                 diet={pet.diet}
               />
               <div className="buttons">
-                <Button
-                  text="Adopt"
-                  type="submit"
-                  style="button3"
-                  backgroundColor="#a4506e"
-                />
-                <Button
-                  text="Foster"
-                  type="submit"
-                  style="button3"
-                  backgroundColor="#a4506e"
-                />
-                <Button
-                  text="Save"
-                  type="submit"
-                  style="button3"
-                  backgroundColor="#a4506e"
-                />
-                <Button
-                  text="Return"
-                  type="submit"
-                  style="button3"
-                  backgroundColor="#a4506e"
-                />
+                {status !== "Adopted" ? (
+                  <Button
+                    text="Adopt"
+                    type="submit"
+                    style="button3"
+                    backgroundColor="#a4506e"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handleAdoptClick();
+                    }}
+                  />
+                ) : null}
+                {status !== "Adopted" && status !== "Fostered" ? (
+                  <Button
+                    text="Foster"
+                    type="submit"
+                    style="button3"
+                    backgroundColor="#a4506e"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handleFosterClick();
+                    }}
+                  />
+                ) : null}
+                {thisPetSaved ? (
+                  <Button
+                    text="Unsave"
+                    type="submit"
+                    style="button3"
+                    backgroundColor="#a4506e"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handleUnSaveClick();
+                    }}
+                  />
+                ) : (
+                  <Button
+                    text="Save"
+                    type="submit"
+                    style="button3"
+                    backgroundColor="#a4506e"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handleSaveClick();
+                    }}
+                  />
+                )}
+                {(status == "Adopted" && thisPetOwned) ||
+                (status == "Fostered" && thisPetOwned) ? (
+                  <Button
+                    text="Return"
+                    type="submit"
+                    style="button3"
+                    backgroundColor="#a4506e"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handleReturnClick();
+                    }}
+                  />
+                ) : null}
               </div>
             </div>
           ),

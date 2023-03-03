@@ -111,7 +111,6 @@ export const LoginSignup = () => {
   formData.append("city", city);
   formData.append("birthDate", birthDate);
   formData.append("password", password);
-  formData.append("rePassword", rePassword);
   formData.append("bio", bio);
   formData.append("file", file);
 
@@ -160,7 +159,7 @@ export const LoginSignup = () => {
               />
               <Input
                 label={"Password"}
-                type={"text"}
+                type={"password"}
                 onInputChange={(eventValue) => {
                   setPassword(eventValue);
                 }}
@@ -239,14 +238,14 @@ export const LoginSignup = () => {
               />
               <Input
                 label={"Password"}
-                type={"text"}
+                type={"password"}
                 onInputChange={(eventValue) => {
                   setPassword(eventValue);
                 }}
               />
               <Input
                 label={"Re-enter Password"}
-                type={"text"}
+                type={"password"}
                 onInputChange={(eventValue) => {
                   setRePassword(eventValue);
                 }}

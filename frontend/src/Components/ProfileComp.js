@@ -47,6 +47,34 @@ export const ProfileComp = (props) => {
               <th>Phone number</th>
               <td>{props.phone}</td>
             </tr>
+            <tr>
+              <th>Adopted</th>
+              {props.adopted && (
+                <td>
+                  {props.adopted.map((pet) => {
+                    return (
+                      <>
+                        <a href={"/pet/" + pet}>{pet}</a> |
+                      </>
+                    );
+                  })}
+                </td>
+              )}
+            </tr>
+            <tr>
+              <th>Fostering</th>
+              {props.fostering && (
+                <td>
+                  {props.fostering.map((pet, index) => {
+                    return (
+                      <>
+                        <a href={"/pet/" + pet}>{pet}</a> |
+                      </>
+                    );
+                  })}
+                </td>
+              )}
+            </tr>
           </table>
         )}
       </div>

@@ -16,6 +16,7 @@ export const SearchBar = (props) => {
           type="submit"
           style="button2"
           backgroundColor="#a4506e"
+          onClick={props.onClick}
         />
       </div>
     </form>

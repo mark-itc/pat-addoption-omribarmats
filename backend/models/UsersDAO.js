@@ -27,8 +27,8 @@ module.exports = class UsersDAO {
     return await collection.findOne({ email });
   }
 
-  static async updateUser(userData) {
-    await collection.updateOne({ _id: userData._id }, { $set: { userData } });
+  static async updateUser(userData, userName) {
+    await collection.updateOne({ userName }, { $set: userData });
   }
 
   static async getUserById(userId) {
@@ -39,6 +39,32 @@ module.exports = class UsersDAO {
     return await collection.find({}).toArray();
   }
   static async GetOneUser(userName) {
+    return await collection.findOne({ userName: userName });
+  }
+
+  static async savePetToUser(userName, pet) {
+    await collection.updateOne({ userName }, { $push: { saved: pet } });
+  }
+
+  static async UnSavePetFromUser(userName, pet) {
+    await collection.updateOne({ userName }, { $pull: { saved: pet } });
+  }
+
+  static async fosterPetToUser(userName, pet) {
+    await collection.updateOne({ userName }, { $push: { fostering: pet } });
+  }
+
+  static async adoptPetToUser(userName, pet) {
+    await collection.updateOne({ userName }, { $push: { adopted: pet } });
+  }
+
+  static async returnPet(userName, pet) {
+    await collection.updateOne({ userName }, { $pull: { fostering: pet } });
+    await collection.updateOne({ userName }, { $pull: { adopted: pet } });
+  }
+
+  static async GetUserPets(userName) {
+    console.log("userName", userName);
     return await collection.findOne({ userName: userName });
   }
 };

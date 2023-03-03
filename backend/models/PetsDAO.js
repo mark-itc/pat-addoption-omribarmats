@@ -18,11 +18,24 @@ module.exports = class PetsDAO {
     await collection.insertOne({ ...petData });
   }
 
-  static async getAllPets() {
-    return await collection.find({}).toArray();
+  static async getAllPets(searchObject) {
+    if (searchObject) {
+      return await collection.find(searchObject).toArray();
+    } else {
+      return await collection.find({}).toArray();
+    }
   }
 
   static async GetOnePet(name) {
     return await collection.findOne({ name: name });
+  }
+
+  static async GetManyPets(names) {
+    return await collection.find({ name: { $in: names } }).toArray();
+  }
+
+  static async updatePet(petData, name) {
+    console.log("trying to update pet status");
+    await collection.updateOne({ name }, { $set: petData });
   }
 };
