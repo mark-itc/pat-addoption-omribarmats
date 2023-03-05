@@ -43,6 +43,7 @@ const uploadsDirectory = "uploads";
 app.use(express.json());
 app.use(cors());
 app.use("/" + uploadsDirectory, express.static(uploadsDirectory));
+
 app.post("/register", upload.single("file"), UsersController.Register);
 app.post("/login", UsersController.Login);
 app.get("/auth", validateToken, UsersController.Auth);
@@ -56,31 +57,32 @@ app.post(
 
 app.get(
   "/allpets/:Dog?/:Cat?/:M?/:F?/:Sheltered?/:Fostered?/:Adopted?/:h20?/:h40?/:h60?/:h80?/:w10?/:w20?/:w30?/:w40?/",
-  // validateToken,
   PetsController.GetAllPets
 );
 app.get("/allusers", validateToken, UsersController.GetAllUsers);
 app.get("/pet/:name", PetsController.GetOnePet);
 app.get("/profile/:userName", validateToken, UsersController.GetOneUser);
+app.post("/update/:userName", validateToken, UsersController.updateUser);
+
 app.post(
-  "/update/:userName",
-  // validateToken,
-  UsersController.updateUser
+  "/update/pet/:name",
+  validateToken,
+  upload.single("file"),
+  PetsController.updatePet
 );
 
 app.get(
   "/getuserpets/:userName",
-  // validateToken,
+  validateToken,
   UsersController.Getuserpets,
   PetsController.Getuserpets
 );
 
-app.post("/save/:user/:pet", UsersController.Save);
-app.post("/unsave/:user/:pet", UsersController.UnSave);
-
-app.post("/foster/:user/:pet", UsersController.Foster);
-app.post("/adopt/:user/:pet", UsersController.Adopt);
-app.post("/return/:user/:pet", UsersController.Return);
+app.post("/save/:user/:pet", validateToken, UsersController.Save);
+app.post("/unsave/:user/:pet", validateToken, UsersController.UnSave);
+app.post("/foster/:user/:pet", validateToken, UsersController.Foster);
+app.post("/adopt/:user/:pet", validateToken, UsersController.Adopt);
+app.post("/return/:user/:pet", validateToken, UsersController.Return);
 
 app.listen(3001, async () => {
   console.log("Server is running on port 3001");

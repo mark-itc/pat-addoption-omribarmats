@@ -106,7 +106,7 @@ module.exports = class PetsController {
         output.h40 !== null ? (output.h40 = "21-40") : null;
         output.h60 !== null ? (output.h60 = "41-60") : null;
         output.h80 !== null ? (output.h80 = "61-80") : null;
-        console.log("output.h40", output.h40);
+
         searchObject.$and.push({
           height: {
             $in: [output.h20, output.h40, output.h60, output.h80].filter(
@@ -172,10 +172,6 @@ module.exports = class PetsController {
 
   static async Getuserpets(req, res) {
     try {
-      console.log("saved", req.saved);
-      console.log("fostering", req.fostering);
-      console.log("adopted", req.adopted);
-
       const saved = req.saved ? await PetsDAO.GetManyPets(req.saved) : [];
 
       const fostering = req.fostering
@@ -202,10 +198,18 @@ module.exports = class PetsController {
 
   static async updatePet(req, res) {
     try {
-      const { pet } = req.params;
-      const { petData } = req.body;
+      console.log("tryng to update");
+      const { name } = req.params;
 
-      const user = await PetsDAO.updatePet(petData, pet);
+      const petData = req.body;
+
+      if (req.file) {
+        petData.file = "http://localhost:3001/" + req.file.path;
+      } else {
+        petData.file = req.body.currentFile;
+      }
+
+      const user = await PetsDAO.updatePet(petData, name);
 
       return res.status(200).json({
         success: true,

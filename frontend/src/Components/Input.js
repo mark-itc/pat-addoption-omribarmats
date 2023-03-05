@@ -28,9 +28,9 @@ export const Input = (props) => {
   let textArea = (
     <>
       <label htmlFor={props.id}>{props.label}</label>
-      <textArea id={props.id} type={props.type} onChange={onChange}>
+      <textarea id={props.id} type={props.type} onChange={onChange}>
         {props.value}
-      </textArea>
+      </textarea>
     </>
   );
 

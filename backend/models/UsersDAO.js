@@ -64,7 +64,6 @@ module.exports = class UsersDAO {
   }
 
   static async GetUserPets(userName) {
-    console.log("userName", userName);
     return await collection.findOne({ userName: userName });
   }
 };

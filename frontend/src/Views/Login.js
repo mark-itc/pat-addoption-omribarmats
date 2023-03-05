@@ -7,6 +7,7 @@ import { Button } from "../Components/Button";
 import logo from "../Images/DogCats.png";
 import "../Components/Styles/Form.css";
 import Cookies from "js-cookie";
+import { register, login } from "../API/usersAPI";
 
 export const LoginSignup = () => {
   const navigate = useNavigate();
@@ -76,30 +77,7 @@ export const LoginSignup = () => {
   }, [email, password]);
 
   const handleLoginClick = async () => {
-    try {
-      const response = await fetch("http://localhost:3001/login", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success === false) {
-            let message = data.message;
-            alert(message);
-          } else {
-            setApiKey(data.token);
-            alert("Success! You are now logged-in");
-            Cookies.set("pet-adoption-credentials", data.token);
-            navigate("/search");
-          }
-        });
-    } catch (e) {}
+    login(email, password, setApiKey, Cookies, navigate);
   };
 
   const formData = new FormData();
@@ -115,26 +93,7 @@ export const LoginSignup = () => {
   formData.append("file", file);
 
   const handleRegisterClick = async () => {
-    try {
-      const response = await fetch("http://localhost:3001/register", {
-        method: "post",
-        headers: {},
-        body: formData,
-      })
-        .catch((error) => console.error(error))
-
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success === false) {
-            let message = data.message;
-            alert(message);
-          } else {
-            setApiKey(data.token);
-            alert("Success! You are now registered");
-            navigate(`/profile/${userName}`);
-          }
-        });
-    } catch (e) {}
+    register(formData, setApiKey, userName, Cookies, navigate);
   };
 
   return (
@@ -184,7 +143,6 @@ export const LoginSignup = () => {
                 type={"text"}
                 onInputChange={(eventValue) => {
                   setFirstName(eventValue);
-                  console.log(firstName);
                 }}
               />
               <Input
@@ -192,7 +150,6 @@ export const LoginSignup = () => {
                 type={"text"}
                 onInputChange={(eventValue) => {
                   setLastName(eventValue);
-                  console.log(lastName);
                 }}
               />
               <Input

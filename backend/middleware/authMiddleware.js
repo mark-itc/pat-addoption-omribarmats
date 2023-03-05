@@ -5,7 +5,7 @@ const validateToken = (req, res, next) => {
   const accessToken = req.header("accessToken");
 
   if (!accessToken || accessToken === "null") {
-    console.log("Failed to authnticate");
+    console.log("Failed to authenticate");
     return res
       .status(500)
       .json({ message: "User not logged in!", success: false });
@@ -15,11 +15,11 @@ const validateToken = (req, res, next) => {
     const validToken = verify(accessToken, process.env.JWT_SECRET);
     req.user = validToken;
     if (validToken) {
-      console.log("user authnticated");
+      console.log("user authenticate");
       return next();
     }
   } catch (err) {
-    console.log("Failed to authnticate");
+    console.log("Failed to authenticate");
     return res.json({ error: err });
   }
 };

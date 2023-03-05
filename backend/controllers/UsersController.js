@@ -299,10 +299,6 @@ module.exports = class UsersController {
       const { userName } = req.params;
       const user = await UsersDAO.GetUserPets(userName);
 
-      console.log("1saved", user.saved);
-      console.log("1fostering", user.fostering);
-      console.log("1adopted", user.adopted);
-
       req.saved = user.saved;
       req.fostering = user.fostering;
       req.adopted = user.adopted;

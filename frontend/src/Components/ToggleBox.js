@@ -2,12 +2,6 @@ import { useState, useEffect } from "react";
 import "./Styles/toggleBox.css";
 
 export const ToggleBox = (props) => {
-  useEffect(() => {
-    console.log("authstate user", props.userName);
-    console.log("user user", props.authUserName);
-    console.log("user role", props.userRole);
-  }, []);
-
   const [active, setActive] = useState("left");
   return (
     <div className="toggleBox">

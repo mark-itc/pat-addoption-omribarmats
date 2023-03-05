@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { ToggleBox } from "../Components/ToggleBox";
-import logo from "../Images/DogCats.png";
 import { SearchBar } from "../Components/SearchBar";
 import { Parameter } from "../Components/Parameter";
 import { CheckBox } from "../Components/CheckBox";
 import { SearchResults } from "../Components/SearchResults";
 import { authContext } from "../Context/authContext";
 import { getPets } from "../API/petsAPI";
+import logo from "../Images/DogCats.png";
 
 export const Search = () => {
   const { apiKey } = useContext(authContext);

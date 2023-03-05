@@ -23,13 +23,13 @@ export const Admin = () => {
     if (results.success) {
       setPets(results.data.map((pet) => pet.name));
     } else {
-      console.log("not success");
+      console.log("No success");
     }
   };
 
   const fetchUsersFromAPI = async () => {
     const results = await getUsers(apiKey);
-    console.log(results.success);
+
     if (results.success) {
       const filteredUsers = results.data
         .filter((user) => user.role === "user")
@@ -43,7 +43,7 @@ export const Admin = () => {
 
       setAdmins(filteredAdmins);
     } else {
-      console.log("not success");
+      console.log("No success");
       alert(results.data.message);
     }
   };

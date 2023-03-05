@@ -17,7 +17,6 @@ export async function getPets(
   w40
 ) {
   try {
-    console.log("trying");
     const response = await fetch(
       `http://localhost:3001/allpets/${dog}/${cat}/${M}/${F}/${sheltered}/${fostered}/${adopted}/${h20}/${h40}/${h60}/${h80}/${w10}/${w20}/${w30}/${w40}/`,
       {
@@ -46,7 +45,6 @@ export async function getPets(
 
 export const getUserPetsFromAPI = async (apiKey, userName) => {
   try {
-    console.log("trying to get saved pets", userName);
     const response = await fetch(
       `http://localhost:3001/getuserpets/${userName}/`,
       {
@@ -64,7 +62,6 @@ export const getUserPetsFromAPI = async (apiKey, userName) => {
           alert(message);
           return { success: false, message: message };
         } else {
-          console.log("data.pet", data.saved);
           return {
             success: true,
             saved: data.saved,
@@ -80,7 +77,6 @@ export const getUserPetsFromAPI = async (apiKey, userName) => {
 
 export const savePet = async (apiKey, userName, petName) => {
   try {
-    console.log("trying to save", userName, petName);
     const response = await fetch(
       `http://localhost:3001/save/${userName}/${petName}`,
       {
@@ -105,7 +101,6 @@ export const savePet = async (apiKey, userName, petName) => {
 
 export const unSavePet = async (apiKey, userName, petName) => {
   try {
-    console.log("trying to save", userName, petName);
     const response = await fetch(
       `http://localhost:3001/unsave/${userName}/${petName}`,
       {
@@ -130,7 +125,6 @@ export const unSavePet = async (apiKey, userName, petName) => {
 
 export const fosterPet = async (apiKey, userName, petName) => {
   try {
-    console.log("trying to foster", userName, petName);
     const response = await fetch(
       `http://localhost:3001/foster/${userName}/${petName}`,
       {
@@ -155,7 +149,6 @@ export const fosterPet = async (apiKey, userName, petName) => {
 
 export const adoptPet = async (apiKey, userName, petName) => {
   try {
-    console.log("trying to adopt", userName, petName);
     const response = await fetch(
       `http://localhost:3001/adopt/${userName}/${petName}`,
       {
@@ -180,7 +173,6 @@ export const adoptPet = async (apiKey, userName, petName) => {
 
 export const returnPet = async (apiKey, userName, petName) => {
   try {
-    console.log("trying to return", userName, petName);
     const response = await fetch(
       `http://localhost:3001/return/${userName}/${petName}`,
       {
@@ -198,6 +190,89 @@ export const returnPet = async (apiKey, userName, petName) => {
           alert(message);
         } else {
           alert("Pet returned");
+        }
+      });
+  } catch (e) {}
+};
+
+export const addPet = async (apiKey, formData) => {
+  try {
+    const response = await fetch("http://localhost:3001/addpet", {
+      method: "post",
+      headers: {
+        accessToken: apiKey,
+      },
+      body: formData,
+    }).catch((error) => console.error(error));
+
+    const results = await response.json();
+
+    if (results.success === false) {
+      alert(results.message);
+    } else {
+      alert("Pet added successfully");
+    }
+  } catch (e) {}
+};
+
+export const updatePet = async (apiKey, petName, petData, navigate) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3001/update/pet/${petName}`,
+      {
+        method: "post",
+        headers: {
+          accessToken: apiKey,
+        },
+        body: petData,
+      }
+    ).catch((error) => console.error(error));
+
+    const results = await response.json();
+
+    if (results.success === false) {
+      alert(results.message);
+    } else {
+      alert("Pet updated successfully");
+      navigate(0);
+    }
+  } catch (e) {}
+};
+
+export const getPet = async (
+  apiKey,
+  name,
+  setPet,
+  setType,
+  setGender,
+  setStatus,
+  setHeight,
+  setWeight,
+  setColor,
+  setHypoallergenic
+) => {
+  try {
+    const response = await fetch(`http://localhost:3001/pet/${name}`, {
+      method: "get",
+      headers: {
+        accessToken: apiKey,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success === false) {
+          let message = data.message;
+          alert(message);
+        } else {
+          setPet(data.pet);
+          setType(data.pet.type);
+          setGender(data.pet.gender);
+          setStatus(data.pet.status);
+          setHeight(data.pet.height);
+          setWeight(data.pet.weight);
+          setColor(data.pet.color);
+          setHypoallergenic(data.pet.hypoallergenic);
         }
       });
   } catch (e) {}

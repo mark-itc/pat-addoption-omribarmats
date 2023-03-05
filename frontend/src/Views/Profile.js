@@ -1,14 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import "../Components/Styles/Form.css";
 import { authContext } from "../Context/authContext";
 import { ToggleBox } from "../Components/ToggleBox";
 import { ProfileComp } from "../Components/ProfileComp";
 import { Input } from "../Components/Input";
 import { Button } from "../Components/Button";
 import logo from "../Images/DogCats.png";
-import profileImage from "../Images/omri-31072022.jpg";
-import { updateUser } from "../API/usersAPI";
-import "../Components/Styles/Form.css";
+import { getUser, updateUser } from "../API/usersAPI";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -23,9 +22,9 @@ export const Profile = () => {
   const [bio, setBio] = useState(null);
   const [password, setPassword] = useState(null);
   const [rePassword, setRePassword] = useState(null);
-  user.age = new Date().getFullYear() - new Date(user.birthDate).getFullYear();
   const [passWordAlert, setPassWordAlert] = useState(false);
   const { userName } = useParams();
+  user.age = new Date().getFullYear() - new Date(user.birthDate).getFullYear();
 
   const userData = {
     firstName,
@@ -45,7 +44,7 @@ export const Profile = () => {
 
   useEffect(() => {
     if (apiKey) {
-      getUser();
+      getUser(userName, setUser, apiKey);
     }
   }, [apiKey, userName]);
 
@@ -55,33 +54,6 @@ export const Profile = () => {
 
   const handleUpdateClick = () => {
     updateUser(apiKey, userName, filteredUserData, navigate);
-  };
-
-  const getUser = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/profile/${userName}`,
-        {
-          method: "get",
-          headers: {
-            accessToken: apiKey,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success === false) {
-            let message = data.message;
-            alert(message);
-          } else {
-            console.log("user data", data.user);
-            setUser(data.user);
-            console.log("authstate user", authState.userName);
-            console.log("user user", user.userName);
-          }
-        });
-    } catch (e) {}
   };
 
   return (

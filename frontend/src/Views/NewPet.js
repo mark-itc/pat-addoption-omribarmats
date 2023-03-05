@@ -6,6 +6,7 @@ import { Input } from "../Components/Input";
 import { Select } from "../Components/Select";
 import { Button } from "../Components/Button";
 import "../Components/Styles/Form.css";
+import { addPet } from "../API/petsAPI";
 
 export const NewPet = () => {
   const { apiKey } = useContext(authContext);
@@ -72,24 +73,7 @@ export const NewPet = () => {
   ]);
 
   const handleAddPetClick = async () => {
-    try {
-      const response = await fetch("http://localhost:3001/addpet", {
-        method: "post",
-        headers: {
-          accessToken: apiKey,
-        },
-        body: formData,
-      }).catch((error) => console.error(error));
-
-      const results = await response.json();
-      console.log("results", results);
-
-      if (results.success === false) {
-        alert(results.message);
-      } else {
-        alert("Pet added successfully");
-      }
-    } catch (e) {}
+    addPet(apiKey, formData);
   };
 
   return (
@@ -101,7 +85,7 @@ export const NewPet = () => {
         logo={logo}
         body={{
           left: (
-            <form className="RegularForm" enctype="multipart/form-data">
+            <form className="RegularForm" encType="multipart/form-data">
               <Input
                 label={"Name"}
                 type={"text"}

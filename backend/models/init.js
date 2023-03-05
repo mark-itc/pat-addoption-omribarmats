@@ -1,7 +1,6 @@
 const { MongoClient } = require("mongodb");
 const UsersDAO = require("./UsersDAO");
 const PetsDAO = require("./PetsDAO");
-// const TasksDAO = require("./TasksDAO");
 
 module.exports.initDB = async function initDB() {
   MongoClient.connect(process.env.MONGODB_URI)
@@ -9,7 +8,6 @@ module.exports.initDB = async function initDB() {
       const db = connection.db(process.env.DB);
       await UsersDAO.injectDB(db);
       await PetsDAO.injectDB(db);
-      // await TasksDAO.injectDB(db);
       console.log("Connection to DB established");
       return;
     })

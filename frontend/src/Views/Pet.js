@@ -1,13 +1,11 @@
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { authContext } from "../Context/authContext";
 import { ToggleBox } from "../Components/ToggleBox";
 import { ProfileComp } from "../Components/ProfileComp";
 import { Button } from "../Components/Button";
-import logo from "../Images/DogCats.png";
-import profileImage from "../Images/2.png";
-import { useState, useEffect, useContext } from "react";
-import { authContext } from "../Context/authContext";
 import { Input } from "../Components/Input";
 import { Select } from "../Components/Select";
-import { useNavigate, useParams } from "react-router-dom";
 import {
   savePet,
   fosterPet,
@@ -15,9 +13,13 @@ import {
   returnPet,
   unSavePet,
   getUserPetsFromAPI,
+  updatePet,
+  getPet,
 } from "../API/petsAPI";
+import logo from "../Images/DogCats.png";
 
 export const Pet = () => {
+  const navigate = useNavigate();
   const { apiKey, authState } = useContext(authContext);
   const [pet, setPet] = useState({});
 
@@ -40,26 +42,40 @@ export const Pet = () => {
   const [thisPetSaved, setThisPetSaved] = useState(false);
   const [thisPetOwned, setThisPetOwned] = useState(false);
 
-  pet.age = new Date().getFullYear() - new Date(pet.birthdate).getFullYear();
-  console.log("date", pet.birthdate);
+  const formData = new FormData();
+  formData.append("name", petName || pet.name);
+  formData.append("type", type || pet.type);
+  formData.append("birthdate", birthDate || pet.birthDate);
+  formData.append("gender", gender || pet.type);
+  formData.append("breed", breed || pet.breed);
+  formData.append("status", status || pet.status);
+  formData.append("height", height || pet.height);
+  formData.append("weight", weight || pet.weight);
+  formData.append("color", color || pet.color);
+  formData.append("hypoallergenic", hypoallergenic || pet.hypoallergenic);
+  formData.append("diet", diet || pet.diet);
+  formData.append("bio", bio || pet.bio);
+  formData.append("file", file);
+  formData.append("currentFile", pet.file);
 
-  console.log("includes", savedPets.includes(pet.name));
-  console.log("saved", savedPets, "petname", pet.name);
-  console.log("thisPetSaved", thisPetSaved);
-  console.log("adoptedPets", adoptedPets);
-  console.log("fosteringPets", fosteringPets);
-  console.log("thisPetOwned", thisPetOwned);
-  console.log("adoptedPets.includes(pet.name)", adoptedPets.includes(pet.name));
+  pet.age = new Date().getFullYear() - new Date(pet.birthdate).getFullYear();
 
   const { name } = useParams();
 
-  const handleUpdatePetClick = async () => {
-    console.log("update");
-  };
-
   useEffect(() => {
     if (apiKey) {
-      getPet();
+      getPet(
+        apiKey,
+        name,
+        setPet,
+        setType,
+        setGender,
+        setStatus,
+        setHeight,
+        setWeight,
+        setColor,
+        setHypoallergenic
+      );
     }
   }, [apiKey]);
 
@@ -82,7 +98,6 @@ export const Pet = () => {
   }, [savedPets, adoptedPets, fosteringPets]);
 
   const getUserPets = async () => {
-    console.log("user", authState.userName);
     const results = await getUserPetsFromAPI(apiKey, authState.userName);
     if (results.success) {
       setSavedPets(results.saved.map((pet) => pet.name));
@@ -91,6 +106,10 @@ export const Pet = () => {
     } else {
       console.log("not success");
     }
+  };
+
+  const handleUpdatePetClick = async () => {
+    updatePet(apiKey, pet.name, formData, navigate);
   };
 
   const handleSaveClick = async () => {
@@ -125,35 +144,6 @@ export const Pet = () => {
     });
   };
 
-  const getPet = async () => {
-    try {
-      const response = await fetch(`http://localhost:3001/pet/${name}`, {
-        method: "get",
-        headers: {
-          accessToken: apiKey,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success === false) {
-            let message = data.message;
-            alert(message);
-          } else {
-            console.log("pet data", data.pet);
-            setPet(data.pet);
-            setType(data.pet.type);
-            setGender(data.pet.gender);
-            setStatus(data.pet.status);
-            setHeight(data.pet.height);
-            setWeight(data.pet.weight);
-            setColor(data.pet.color);
-            setHypoallergenic(data.pet.hypoallergenic);
-          }
-        });
-    } catch (e) {}
-  };
-  console.log("Status", status, typeof status);
   return (
     <div>
       <ToggleBox
@@ -246,7 +236,7 @@ export const Pet = () => {
             </div>
           ),
           right: (
-            <form className="RegularForm" enctype="multipart/form-data">
+            <form className="RegularForm" encType="multipart/form-data">
               <Input
                 value={pet.name}
                 label={"Name"}

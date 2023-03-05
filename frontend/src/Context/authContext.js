@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
           },
         });
         if (response.data.error) {
-          console.log("no success", response.data.error);
+          console.log("No success", response.data.error);
           setAuthState((prevState) => ({ ...prevState, status: false }));
         } else {
           console.log("success", response.data);

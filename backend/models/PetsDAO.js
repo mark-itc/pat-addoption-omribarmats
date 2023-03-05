@@ -35,7 +35,6 @@ module.exports = class PetsDAO {
   }
 
   static async updatePet(petData, name) {
-    console.log("trying to update pet status");
     await collection.updateOne({ name }, { $set: petData });
   }
 };
